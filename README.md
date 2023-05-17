@@ -39,3 +39,33 @@ This is a warmup. Just start by calling `info()` and follow the instructions
 [Script](./scripts/warmup/00-HelloEthernaut.ts)
 
 ## 01 - Fallback
+
+Here we have to take ownership of the contract and withdraw all the Ether.
+
+In order to be the `owner` we will have to send at least 1 wei to the contract, which will trigger the `receive` special function:
+
+```solidity
+receive() external payable {
+  require(msg.value > 0 && contributions[msg.sender] > 0);
+  owner = msg.sender;
+}
+
+```
+
+We also have to satisfy the `contributions[msg.sender] > 0`:
+
+```solidity
+function contribute() public payable {
+  require(msg.value < 0.001 ether);
+  contributions[msg.sender] += msg.value;
+}
+
+```
+
+So beforehand, we have to call the contribute, and make a small contribution to it.
+
+After those two steps we can call the `withdraw` and job done.
+
+[Script](./scripts/01-Fallback.ts) | [Test](./test/01-Fallback.spec.ts)
+
+## 02 - Fallout
